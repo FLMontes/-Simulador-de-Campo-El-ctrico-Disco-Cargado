@@ -1,0 +1,55 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Solicitar al usuario que ingrese los datos del problema
+R = float(input("Ingrese el radio del disco (en cm): "))
+# Los valores Q y q se ingresan en microcoulombs y se convierten a coulombs
+Q = float(input("Ingrese la carga total del disco (en 10⁻⁶ C): ")) * 1e-6
+x = float(input("Ingrese la distancia de la partícula al disco (en cm): "))
+q = float(input("Ingrese la carga de la partícula (en 10⁻⁶ C): ")) * 1e-6
+
+# Constante de permitividad del vacío (en C²/(N·m²))
+epsilon_0 = 8.85e-12
+
+# Cálculo de la densidad superficial de carga
+sigma = Q / (np.pi * R**2)
+
+# Cálculo del campo eléctrico en el eje del disco
+E = (sigma / (2 * epsilon_0)) * (1 - (x / np.sqrt(x**2 + R**2)))
+
+# Cálculo de la fuerza eléctrica sobre la partícula
+F = q * E
+
+# Visualización gráfica
+fig, ax = plt.subplots(figsize=(6, 6))
+
+# Configurar límites de los ejes
+ax.set_xlim(-R - 10, R + 10)
+ax.set_ylim(-10, x + 20)
+
+# Dibujar el disco cargado como un círculo en el origen
+circle = plt.Circle((0, 0), R, color='blue', alpha=0.3, label="Disco cargado")
+ax.add_patch(circle)
+
+# Dibujar la partícula (un punto rojo) en la posición (0, x)
+ax.scatter(0, x, color='red', label="Partícula q", zorder=3)
+
+# Factor de escala para visualizar correctamente los vectores
+scaling_factor = 10
+
+# Dibujar el vector del campo eléctrico en la posición de la partícula
+ax.arrow(0, x, 0, -E * scaling_factor, head_width=2, head_length=5, color='green', label="Campo eléctrico E")
+
+# Dibujar el vector de la fuerza eléctrica sobre la partícula
+ax.arrow(0, x, 0, -F * scaling_factor, head_width=2, head_length=5, color='purple', label="Fuerza eléctrica F")
+
+# Etiquetas y título
+ax.set_xlabel("Posición en X (cm)")
+ax.set_ylabel("Posición en Y (cm)")
+ax.set_title("Campo y Fuerza Eléctrica sobre la Partícula")
+ax.axhline(0, color='black', linewidth=1)
+ax.axvline(0, color='black', linewidth=1)
+ax.legend()
+
+plt.grid()
+plt.show()
